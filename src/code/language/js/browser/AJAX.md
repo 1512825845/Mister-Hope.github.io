@@ -24,15 +24,15 @@ Ajax 不是 JavaScript 的规范，它只是一个哥们“发明”的缩写: A
 ```js
 "use strict";
 
-function success(text) {
-  const textarea = document.getElementById("test-response-text");
+const success = (text) => {
+  const textarea = document.querySelector("#test-response-text");
   textarea.value = text;
-}
+};
 
-function fail(code) {
-  const textarea = document.getElementById("test-response-text");
+const fail = (code) => {
+  const textarea = document.querySelector("#test-response-text");
   textarea.value = `Error code: ${code}`;
-}
+};
 
 const request = new XMLHttpRequest(); // 新建XMLHttpRequest对象
 
@@ -63,15 +63,15 @@ alert("请求已发送，请等待响应...");
 ```js
 "use strict";
 
-function success(text) {
-  const textarea = document.getElementById("test-ie-response-text");
+const success = (text) => {
+  const textarea = document.querySelector("#test-ie-response-text");
   textarea.value = text;
-}
+};
 
-function fail(code) {
-  const textarea = document.getElementById("test-ie-response-text");
+const fail = (code) => {
+  const textarea = document.querySelector("#test-ie-response-text");
   textarea.value = `Error code: ${code}`;
-}
+};
 
 const request = new ActiveXObject("Microsoft.XMLHTTP"); // 新建Microsoft.XMLHTTP对象
 
@@ -106,7 +106,7 @@ if (window.XMLHttpRequest) request = new XMLHttpRequest();
 else request = new ActiveXObject("Microsoft.XMLHTTP");
 ```
 
-通过检测 `window` 对象是否有 `XMLHttpRequest` 属性来确定浏览器是否支持标准的 `XMLHttpRequest`。注意，不要根据浏览器的`navigator.userAgent` 来检测浏览器是否支持某个 JavaScript 特性，一是因为这个字符串本身可以伪造，二是通过 IE 版本判断 JavaScript 特性将非常复杂。
+通过检测 `window` 对象是否有 `XMLHttpRequest` 属性来确定浏览器是否支持标准的 `XMLHttpRequest`。注意，不要根据浏览器的 `navigator.userAgent` 来检测浏览器是否支持某个 JavaScript 特性，一是因为这个字符串本身可以伪造，二是通过 IE 版本判断 JavaScript 特性将非常复杂。
 
 当创建了 `XMLHttpRequest` 对象后，要先设置 `onreadystatechange` 的回调函数。在回调函数中，通常我们只需通过 `readyState === 4` 判断请求是否完成，如果已完成，再根据 `status === 200` 判断是否是一个成功的响应。
 
@@ -167,24 +167,24 @@ refreshPrice({"0000001":{"code": "0000001", ... });
 因此我们需要首先在页面中准备好回调函数:
 
 ```js
-function refreshPrice(data) {
-  const p = document.getElementById("test-jsonp");
+const refreshPrice = (data) => {
+  const p = document.querySelector("#test-jsonp");
 
   p.innerHTML = `当前价格: ${data["0000001"].name}: ${data["0000001"].price}；${data["1399001"].name}: ${data["1399001"].price}`;
-}
+};
 ```
 
 最后用 `getPrice()` 函数触发:
 
 ```js
-function getPrice() {
+const getPrice = () => {
   const js = document.createElement("script");
   const head = document.getElementsByTagName("head")[0];
 
   js.src =
     "https://api.money.126.net/data/feed/0000001,1399001?callback=refreshPrice";
   head.appendChild(js);
-}
+};
 ```
 
 就完成了跨域加载数据。
@@ -205,7 +205,7 @@ CORS 全称 `Cross-Origin Resource Sharing`，是 HTML5 规范定义的如何跨
 
 假设本域是 `my.com`，外域是 `sina.com`，只要响应头 `Access-Control-Allow-Origin` 为 `https://my.com`，或者是 `*`，本次请求就可以成功。
 
-可见，跨域能否成功，取决于对方服务器是否愿意给您设置一个正确的`Access-Control-Allow-Origin`，决定权始终在对方手中。
+可见，跨域能否成功，取决于对方服务器是否愿意给您设置一个正确的 `Access-Control-Allow-Origin`，决定权始终在对方手中。
 
 上面这种跨域请求，称之为“简单请求”。简单请求包括 `GET`、`HEAD` 和 `POST` ( POST 的 `Content-Type` 类型
 仅限 `application/x-www-form-urlencoded、multipart/form-data和text/plain`)，并且不能出现任何自定义头(例如，X-Custom: 12345)，通常能满足 90% 的需求。
